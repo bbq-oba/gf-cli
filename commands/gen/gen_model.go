@@ -115,7 +115,7 @@ import (
 	"github.com/gogf/gf/database/gdb"
 )`)
 	}
-	packageName := gstr.SnakeCase(variable)
+	packageName := gstr.CamelLowerCase(variable)
 	fileName := gstr.Trim(packageName, "-_.")
 	if len(fileName) > 5 && fileName[len(fileName)-5:] == "_test" {
 		// Add suffix to avoid the table name which contains "_test",
@@ -123,7 +123,7 @@ import (
 		fileName += "_table"
 	}
 	// index
-	path := gfile.Join(folderPath, packageName, fileName+".go")
+	path := gfile.Join(folderPath, packageName, gstr.CamelCase(fileName)+".go")
 	if !gfile.Exists(path) {
 		indexContent := gstr.ReplaceByMap(templateIndexContent, g.MapStrStr{
 			"{TplTableName}":      table,
@@ -140,7 +140,7 @@ import (
 		}
 	}
 	// entity
-	path = gfile.Join(folderPath, packageName, fileName+"_entity.go")
+	path = gfile.Join(folderPath, packageName, gstr.CamelCase(fileName)+"Entity.go")
 	entityContent := gstr.ReplaceByMap(templateEntityContent, g.MapStrStr{
 		"{TplTableName}":      table,
 		"{TplModelName}":      camelName,
@@ -155,7 +155,7 @@ import (
 		mlog.Print("generated:", path)
 	}
 	// model
-	path = gfile.Join(folderPath, packageName, fileName+"_model.go")
+	path = gfile.Join(folderPath, packageName, gstr.CamelCase(fileName)+"Model.go")
 	modelContent := gstr.ReplaceByMap(templateModelContent, g.MapStrStr{
 		"{TplTableName}":      table,
 		"{TplModelName}":      camelName,

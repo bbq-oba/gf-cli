@@ -20,12 +20,17 @@ import (
 type arModel struct {
 	gmvc.M
 }
-
-var (
+const (
 	// Table is the table name of {TplTableName}.
 	Table = "{TplTableName}"
+)
+// Model is the model object of {TplTableName}.
+func Model() *arModel {
+	return &arModel{g.DB("default").Table(Table).Safe()}
+}
+var (
+	// Table is the table name of {TplTableName}.
 	// Model is the model object of {TplTableName}.
-	Model = &arModel{g.DB("{TplGroupName}").Table(Table).Safe()}
 	// Columns defines and stores column names for table {TplTableName}.
 	Columns = struct {
 		{TplColumnDefine}
@@ -131,10 +136,10 @@ func (m *arModel) Where(where interface{}, args ...interface{}) *arModel {
 	return &arModel{m.M.Where(where, args...)}
 }
 
-// WherePri does the same logic as Model.Where except that if the parameter <where>
+// WherePri does the same logic as Model().Where except that if the parameter <where>
 // is a single condition like int/string/float/slice, it treats the condition as the primary
 // key value. That is, if primary key is "id" and given <where> parameter as "123", the
-// WherePri function treats the condition as "id=123", but Model.Where treats the condition
+// WherePri function treats the condition as "id=123", but Model().Where treats the condition
 // as string "123".
 func (m *arModel) WherePri(where interface{}, args ...interface{}) *arModel {
 	return &arModel{m.M.WherePri(where, args...)}
@@ -217,8 +222,8 @@ func (m *arModel) Data(data ...interface{}) *arModel {
 // It retrieves the records from table and returns the result as []*Entity.
 // It returns nil if there's no record retrieved with the given conditions from table.
 //
-// The optional parameter <where> is the same as the parameter of Model.Where function,
-// see Model.Where.
+// The optional parameter <where> is the same as the parameter of Model().Where function,
+// see Model().Where.
 func (m *arModel) All(where ...interface{}) ([]*Entity, error) {
 	all, err := m.M.All(where...)
 	if err != nil {
@@ -234,8 +239,8 @@ func (m *arModel) All(where ...interface{}) ([]*Entity, error) {
 // One retrieves one record from table and returns the result as *Entity.
 // It returns nil if there's no record retrieved with the given conditions from table.
 //
-// The optional parameter <where> is the same as the parameter of Model.Where function,
-// see Model.Where.
+// The optional parameter <where> is the same as the parameter of Model().Where function,
+// see Model().Where.
 func (m *arModel) One(where ...interface{}) (*Entity, error) {
 	one, err := m.M.One(where...)
 	if err != nil {
@@ -248,8 +253,8 @@ func (m *arModel) One(where ...interface{}) (*Entity, error) {
 	return entity, nil
 }
 
-// FindOne retrieves and returns a single Record by Model.WherePri and Model.One.
-// Also see Model.WherePri and Model.One.
+// FindOne retrieves and returns a single Record by Model().WherePri and Model().One.
+// Also see Model().WherePri and Model().One.
 func (m *arModel) FindOne(where ...interface{}) (*Entity, error) {
 	one, err := m.M.FindOne(where...)
 	if err != nil {
@@ -262,8 +267,8 @@ func (m *arModel) FindOne(where ...interface{}) (*Entity, error) {
 	return entity, nil
 }
 
-// FindAll retrieves and returns Result by by Model.WherePri and Model.All.
-// Also see Model.WherePri and Model.All.
+// FindAll retrieves and returns Result by by Model().WherePri and Model().All.
+// Also see Model().WherePri and Model().All.
 func (m *arModel) FindAll(where ...interface{}) ([]*Entity, error) {
 	all, err := m.M.FindAll(where...)
 	if err != nil {
